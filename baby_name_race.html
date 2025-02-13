@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Name Race</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #timer { font-size: 24px; font-weight: bold; }
+        #inputBox { width: 80%; padding: 10px; margin: 10px; font-size: 18px; }
+        #startBtn, #submitBtn { padding: 10px 20px; font-size: 18px; cursor: pointer; }
+        #nameList { margin-top: 20px; }
+        #leaderboard { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Baby Name Race</h1>
+    <p>Type as many baby names as you can in 60 seconds!</p>
+    <p id="timer">60</p>
+    <input type="text" id="inputBox" placeholder="Enter baby name" disabled>
+    <button id="startBtn">Start Game</button>
+    <button id="submitBtn" disabled>Submit</button>
+    <ul id="nameList"></ul>
+    <div id="leaderboard"></div>
+    
+    <script>
+        let timeLeft = 60;
+        let timer;
+        let names = [];
+        
+        document.getElementById("startBtn").addEventListener("click", function() {
+            timeLeft = 60;
+            names = [];
+            document.getElementById("inputBox").disabled = false;
+            document.getElementById("submitBtn").disabled = false;
+            document.getElementById("inputBox").focus();
+            this.disabled = true;
+            document.getElementById("nameList").innerHTML = "";
+            document.getElementById("leaderboard").innerHTML = "";
+            
+            timer = setInterval(function() {
+                timeLeft--;
+                document.getElementById("timer").innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById("inputBox").disabled = true;
+                    document.getElementById("submitBtn").disabled = true;
+                    document.getElementById("startBtn").disabled = false;
+                    showLeaderboard();
+                }
+            }, 1000);
+        });
+        
+        document.getElementById("inputBox").addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && this.value.trim() !== "") {
+                names.push(this.value.trim());
+                let li = document.createElement("li");
+                li.textContent = this.value.trim();
+                document.getElementById("nameList").appendChild(li);
+                this.value = "";
+            }
+        });
+        
+        document.getElementById("submitBtn").addEventListener("click", showLeaderboard);
+        
+        function showLeaderboard() {
+            document.getElementById("leaderboard").innerHTML = `<h2>Game Over!</h2><p>You entered ${names.length} names.</p>`;
+        }
+    </script>
+</body>
+</html>
